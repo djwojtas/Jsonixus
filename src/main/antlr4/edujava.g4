@@ -103,19 +103,19 @@ condition
     //todo badz rowne
 
 lessThen
-    :   getData WIEKSZYSYM getData
+    :   getOrCalculateData WIEKSZYSYM getOrCalculateData
     ;
 
 moreThen
-    :   getData MNIEJSZYSYM getData
+    :   getOrCalculateData MNIEJSZYSYM getOrCalculateData
     ;
 
 equal
-    :   getData ROWNOSCSYM getData
+    :   getOrCalculateData ROWNOSCSYM getOrCalculateData
     ;
 
 diffrent
-    :   getData ROZNYSYM getData
+    :   getOrCalculateData ROZNYSYM getOrCalculateData
     ;
 
 forUpdate
