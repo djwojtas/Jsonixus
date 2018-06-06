@@ -9,10 +9,15 @@ functionDeclaration
     ;
 
 functionCall
-    :   name '(' variables? ')'
+    :   name '(' names? ')'
     ;
 
 dataType
+    :   arrayType
+    |   singleDataType
+    ;
+
+singleDataType
     :   DOUBLESYM
     |   STRINGSYM
     |   BOOLEANSYM
@@ -20,11 +25,12 @@ dataType
     ;
 
 returnType
-    :   DOUBLESYM
-    |   STRINGSYM
-    |   BOOLEANSYM
+    :   dataType
     |   VOIDSYM
-    |   INTSYM
+    ;
+
+arrayType
+    :   singleDataType '[]'
     ;
 
 variables
@@ -36,12 +42,19 @@ variable
     :   dataType name
     ;
 
+names
+    :   name
+    |   names ',' name
+    ;
+
 name
     :   NAME
     ;
 
 codeExpression
-    :   declaration ';'
+    :   ifstatement
+    |   operation ';'
+    |   declaration ';'
     |   loop
     ;
 
@@ -55,10 +68,14 @@ declaration
     :   dataType? name assignmentExpression?
     ;
 
+operation
+    :   elementName assignmentExpression
+    ;
+
 assignmentExpression
-    :   '=' data operator data
+    :   '=' getData operator getData
     |   '=' functionCall
-    |   '=' data
+    |   '=' getData
     ;
 
 operator
@@ -106,6 +123,15 @@ forUpdate
     |   name assignmentExpression
     ;
 
+arrayElement
+    :   name '[' getOrCalculateData ']'
+    ;
+
+elementName
+    :   arrayElement
+    |   name
+    ;
+
 data
     :   INT
     |   DOUBLE
@@ -113,11 +139,51 @@ data
     |   BOOLEAN
     ;
 
+getOrCalculateData
+    :   getData
+    |   calculations
+    ;
+
 getData
     :   name
     |   functionCall
+    |   data
+    |   arrayType
     ;
 
+calculations
+    :   getData
+    |   calculation
+    |   calculation calculationSym calculations
+    ;
+
+calculation
+    :   plusMinusCalculations
+    |   timesDivideCalculations
+    ;
+
+plusMinusCalculations
+    :   getData PLUSSYM getData
+    |   getData MINUSSYM getData
+    ;
+
+timesDivideCalculations
+    :   getData RAZYSYM getData
+    |   getData DZIELENIESYM getData
+    ;
+
+calculationSym
+    :   PLUSSYM
+    |   MINUSSYM
+    |   RAZYSYM
+    |   DZIELENIESYM
+    ;
+
+ifstatement
+    :   IFSYM '(' condition ')' '{' implementation? '}'
+    ;
+
+ARRAYSYM : '[]';
 INTSYM : 'int';
 IFSYM : 'if';
 RETURNSYM  : 'return';
@@ -155,9 +221,8 @@ KOMENTARZSYM : '//';
 BOOLEAN : 'true' | 'false';
 INT : [0-9]+;
 DOUBLE : [0-9]+ '.' [0-9]+;
-NAME : [a-zA-Z_]?[a-zA-Z0-9_]+;
+NAME : [a-zA-Z_][a-zA-Z0-9_]*;
 STRING : '"' [^"]* '"';
-
 
 Whitespace
     :   [ \t\r\n]+
