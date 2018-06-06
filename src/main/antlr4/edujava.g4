@@ -56,6 +56,11 @@ codeExpression
     |   operation ';'
     |   declaration ';'
     |   loop
+    |   returnStatement ';'
+    ;
+
+returnStatement
+    :   RETURNSYM getOrCalculateData
     ;
 
 implementation
@@ -148,7 +153,7 @@ getData
     :   name
     |   functionCall
     |   data
-    |   arrayType
+    |   elementName
     ;
 
 calculations
