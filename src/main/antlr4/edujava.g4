@@ -78,10 +78,11 @@ operation
     ;
 
 assignmentExpression
-    :   '=' getData operator getData
-    |   '=' functionCall
+    :   '=' multipleParenthesis
     |   '=' getData
     ;
+
+
 
 operator
     :   PLUSSYM
@@ -129,7 +130,7 @@ forUpdate
     ;
 
 arrayElement
-    :   name '[' getOrCalculateData ']'
+    :   name '[' multipleParenthesis ']'
     ;
 
 elementName
@@ -142,6 +143,24 @@ data
     |   DOUBLE
     |   STRING
     |   BOOLEAN
+    ;
+
+multipleParenthesis
+    :   getOrCalculateData
+    |   nestedParentheses
+    |   nestedParentheses parenthesableOperation multipleParenthesis
+    ;
+
+parenthesableOperation
+    :   operator
+    |   MNIEJSZYSYM
+    |   WIEKSZYSYM
+    |   ROWNOSCSYM
+    |   ROZNYSYM
+    ;
+
+nestedParentheses
+    :   '(' ( multipleParenthesis | getOrCalculateData )* ')'
     ;
 
 getOrCalculateData
@@ -187,6 +206,8 @@ calculationSym
 ifstatement
     :   IFSYM '(' condition ')' '{' implementation? '}'
     ;
+
+
 
 ARRAYSYM : '[]';
 INTSYM : 'int';
