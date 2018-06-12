@@ -102,11 +102,12 @@ loopFor
 condition
     :   lessThen
     |   moreThen
+    |   moreOrEqual
+    |   lessOrEqual
     |   equal
     |   diffrent
     |   BOOLEAN
     ;
-    //todo badz rowne
 
 lessThen
     :   getOrCalculateData WIEKSZYSYM getOrCalculateData
@@ -114,6 +115,14 @@ lessThen
 
 moreThen
     :   getOrCalculateData MNIEJSZYSYM getOrCalculateData
+    ;
+
+moreOrEqual
+    :   getOrCalculateData MNIEJSZYLUBROWNYSYM getOrCalculateData
+    ;
+
+lessOrEqual
+    :   getOrCalculateData WIEKSZYLUBROWNYSYM getOrCalculateData
     ;
 
 equal
@@ -207,15 +216,38 @@ ifstatement
     :   IFSYM '(' condition ')' '{' implementation? '}'
     ;
 
+json
+    :   value
+    ;
 
+value
+    :   data
+    |   jsonObj
+    |   jsonArray
+    |   NULLSYM
+    ;
+
+jsonObj
+    :   '{' pair (',' pair )* '}'
+    |   '{' '}'
+    ;
+
+pair
+    : STRING ':' value
+    ;
+
+jsonArray
+    :   '[' value (',' value)* ']'
+    |   '[' ']'
+    ;
 
 ARRAYSYM : '[]';
 INTSYM : 'int';
 IFSYM : 'if';
 RETURNSYM  : 'return';
-ANDSYM  : 'and';
-ORSYM  : 'or';
-NOTSYM  : 'not';
+ANDSYM  : '&&';
+ORSYM  : '||';
+NOTSYM  : '!';
 DOUBLESYM : 'double';
 STRINGSYM : 'string';
 BOOLEANSYM : 'boolean';
@@ -243,12 +275,14 @@ KONIECLININISYM : 'EOF';
 MNIEJSZYLUBROWNYSYM : '<=';
 WIEKSZYLUBROWNYSYM : '>=';
 KOMENTARZSYM : '//';
+NULLSYM : 'null';
 
 BOOLEAN : 'true' | 'false';
 INT : [0-9]+;
 DOUBLE : [0-9]+ '.' [0-9]+;
 NAME : [a-zA-Z_][a-zA-Z0-9_]*;
-STRING : '"' [^"]* '"';
+STRING :  '"' ~["]* '"';
+
 
 Whitespace
     :   [ \t\r\n]+
