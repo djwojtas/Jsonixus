@@ -1,11 +1,20 @@
 grammar edujava;
 
+@header {
+    package pl.edu.agh.generated;
+}
+
 root
     :   functionDeclaration
     ;
 
 functionDeclaration
-    :   returnType name '(' variables? ')' '{' implementation? '}'
+    :   mainFunction
+    |   returnType name '(' variables? ')' '{' implementation? '}'
+    ;
+
+mainFunction //todo zmienic main na mainsym?
+    :   VOIDSYM 'main' '()' '{' implementation? '}'
     ;
 
 functionCall
