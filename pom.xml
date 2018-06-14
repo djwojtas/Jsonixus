@@ -65,6 +65,7 @@
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-maven-plugin</artifactId>
         <configuration>
+          <visitor>true</visitor>
           <outputDirectory>${basedir}/src/main/java/pl/edu/agh/generated</outputDirectory>
         </configuration>
         <version>4.7</version>
