@@ -2,37 +2,23 @@ package pl.edu.agh;
 
 //import java.awt.desktop.SystemSleepEvent;
 //import java.awt.desktop.SystemSleepEvent;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 import pl.edu.agh.generated.edujavaBaseVisitor;
 import pl.edu.agh.generated.edujavaParser;
 
-import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MyVisitor extends edujavaBaseVisitor<Value> {
 
     private Map<String, Value> memory = new HashMap<String, Value>();
-
-    private FileUtil out = new FileUtil("C:/Users/djwojtas/gramatyka/src/main/java/pl/edu/agh/output.jxs");
-
-    private void beginWritingToFile(){
-        out.write("import testImport.xd \n\n");
-    }
-
-
-    private void write(String s){
-        out.write(" " + s );
-    }
-
-    private void endWriting(){
-        out.close();
-    }
+    FileUtil fileUtil;
 
 
     @Override
     public Value visitRoot(edujavaParser.RootContext ctx) {
-        beginWritingToFile();
+        fileUtil = new FileUtil("/Users/iza/Desktop/jsonixusTest/Jsonixus/src/main/java/pl/edu/agh/Output.xd");
         return super.visitRoot(ctx);
     }
 
@@ -44,23 +30,20 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
 //
 //        switch (ctx.op.getType()) {
 //            case edujavaParser.PLUSSYM:
-//                System.out.println(left.asString());
-//                return left.isDouble() && right.isDouble() ?
-//                        new Value(Double.valueOf(ctx.getData(0).getText()) + Double.valueOf(ctx.getData(1).getText())) :
-//                        new Value(Double.valueOf(ctx.getData(0).getText()) + Double.valueOf(ctx.getData(1).getText()));
+//
 //            case edujavaParser.MINUSSYM:
-//                System.out.write("minus");
-//                new Value(Double.valueOf(ctx.getData(0).getText()) - Double.valueOf(ctx.getData(1).getText()));
+//
 //            default:
 //                throw new RuntimeException("unknown operator");
 //        }
+
         return super.visitPlusMinusCalculations(ctx);
     }
 
     @Override
     public Value visitMainFunction(edujavaParser.MainFunctionContext ctx) {
 
-        write("\n\n public static void main(String[] args) { \n\n");
+        fileUtil.write("\n\n public static void main(String[] args) { \n\n");
 
         String funCall = ctx.getText();
         String value = String.valueOf(funCall);
@@ -76,13 +59,13 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
         System.out.println("visitFunctionCall detected: " + value);
 
         visit(ctx.name());
-        write("(");
-        
+        fileUtil.write("(");
+
         if (ctx.names() == null) {
-            write(")");
+            fileUtil.write(")");
         } else {
             visit(ctx.names());
-            write(")");
+            fileUtil.write(")");
         }
         //return visitChildren(ctx); <- caused visitig tree again and duplicating text
        return null;
@@ -90,15 +73,15 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
 
     @Override
     public Value visitCatchEOF(edujavaParser.CatchEOFContext ctx) {
-        write("\n\n}");
-        endWriting();
+        fileUtil.write("\n\n}");
+        fileUtil.close();
         return super.visitCatchEOF(ctx);
     }
 
     @Override
     public Value visitSingleDataType(edujavaParser.SingleDataTypeContext ctx) {
         String value = ctx.getText();
-        write(value);
+        fileUtil.write(value);
         System.out.println("visitSingleDataType detected: " + value);
        // return visitChildren(ctx);
         return super.visitSingleDataType(ctx);
@@ -116,29 +99,29 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
         ParseTree tree = ctx.getChild(1);
 
         if (tree != null) {
-            write("public static");
+            fileUtil.write("public static");
             visit(ctx.returnType());
             visit(ctx.name());
-            write("(");
+            fileUtil.write("(");
             if (ctx.variables() == null) {
-                write(")");
+                fileUtil.write(")");
             } else {
                 visit(ctx.variables());
-                write(")");
+                fileUtil.write(")");
             }
 
-            write("{");
+            fileUtil.write("{");
 
             if (ctx.implementation() == null) {
-                write("}");
+                fileUtil.write("}");
             } else {
-                write("\n");
+                fileUtil.write("\n");
                 visit(ctx.implementation());
-                write("\n}\n");
+                fileUtil.write("\n}\n");
             }
             return null;
         }
-        
+
         return super.visitFunctionDeclaration(ctx);
     }
 
@@ -149,12 +132,12 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
         if (ctx.getChild(2) == null) {
             return visitChildren(ctx.dataType());
         } else {
-            write("void");
+            fileUtil.write("void");
             return this.visitReturnType(ctx);
         }
     }
-    
-    
+
+
     @Override
     public Value visitFunctionDeclarations(edujavaParser.FunctionDeclarationsContext ctx) {
         String value = ctx.getText();
@@ -172,7 +155,7 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitAssignmentExpression(edujavaParser.AssignmentExpressionContext ctx) {
         String value = ctx.getText();
         System.out.println("visitAssignmentExpression detected: " + value );
-        write("=");
+        fileUtil.write("=");
         return visitChildren(ctx);
     }
 
@@ -222,7 +205,7 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitDataBool(edujavaParser.DataBoolContext ctx) {
         String value = ctx.getText();
         System.out.println("visitDataBool detected: " + value );
-        write(ctx.BOOLEAN().getSymbol().getText());
+        fileUtil.write(ctx.BOOLEAN().getSymbol().getText());
         return new Value(Boolean.valueOf(ctx.getText()));
     }
 
@@ -230,7 +213,7 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitDataInt(edujavaParser.DataIntContext ctx) {
         String value = ctx.getText();
         System.out.println("visitDataInt detected: " + value );
-        write(ctx.INT().getSymbol().getText());
+        fileUtil.write(ctx.INT().getSymbol().getText());
         return new Value(Integer.valueOf(ctx.getText()));
     }
 
@@ -238,7 +221,7 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitDataDbl(edujavaParser.DataDblContext ctx) {
         String value = ctx.getText();
         System.out.println("visitDataDouble detected: " + value );
-        write(ctx.DOUBLE().getSymbol().getText());
+        fileUtil.write(ctx.DOUBLE().getSymbol().getText());
         return new Value(Double.valueOf(ctx.getText()));
     }
 
@@ -246,7 +229,7 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitDataString(edujavaParser.DataStringContext ctx) {
         String value = ctx.getText();
         System.out.println("visitDataString detected: " + value );
-        write(ctx.STRING().getSymbol().getText());
+        fileUtil.write(ctx.STRING().getSymbol().getText());
         return new Value(ctx.getText().toString());
     }
 
@@ -261,7 +244,7 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitReturnStatement(edujavaParser.ReturnStatementContext ctx) {
         String value = ctx.getText();
         System.out.println("visitReturnStatement detected: " + value );
-        write("\n" + ctx.RETURNSYM().getSymbol().getText());
+        fileUtil.write("\n" + ctx.RETURNSYM().getSymbol().getText());
         return super.visitReturnStatement(ctx);
     }
 
@@ -269,14 +252,14 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitName(edujavaParser.NameContext ctx) {
         String value = ctx.getText();
         System.out.println("visitName detected: " + value );
-        write(value);
+        fileUtil.write(value);
         return super.visitName(ctx);
     }
 
     @Override
     public Value visitSemicolon(edujavaParser.SemicolonContext ctx) {
         String value = ctx.getText();
-        write(";\n");
+        fileUtil.write(";\n");
         System.out.println("visitSemicolon detected: " + value );
         return super.visitSemicolon(ctx);
     }
