@@ -3,7 +3,6 @@ package pl.edu.agh;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import pl.edu.agh.generated.MyVisitor;
 import pl.edu.agh.generated.edujavaLexer;
 import pl.edu.agh.generated.edujavaParser;
 
