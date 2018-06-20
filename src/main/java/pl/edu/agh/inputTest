@@ -1,0 +1,11 @@
+int kiedJestSesja( ) {
+int result = 24;
+return result;
+}
+
+void main() { int xd = kiedJestSesja( );
+boolean czylubiePlacki = true;
+boolean czyLubieMaslo = czylubiePlacki; }
+
+
+

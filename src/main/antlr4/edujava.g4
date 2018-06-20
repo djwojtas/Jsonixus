@@ -5,7 +5,20 @@ grammar edujava;
 }
 
 root
+    :   functionDeclarations catchEOF
+    ;
+
+catchEOF
+    :   EOF
+    ;
+
+functionDeclarations
     :   functionDeclaration
+    |   functionDeclarations functionDeclaration
+    ;
+
+semicolon
+    : ';'
     ;
 
 functionDeclaration
@@ -62,10 +75,10 @@ name
 
 codeExpression
     :   ifstatement
-    |   operation ';'
-    |   declaration ';'
+    |   operation semicolon
+    |   declaration semicolon
     |   loop
-    |   returnStatement ';'
+    |   returnStatement semicolon
     ;
 
 returnStatement
@@ -105,18 +118,17 @@ loop
     ;
 
 loopFor
-    :   FORSYM '(' declaration? ';' condition? ';' forUpdate? ')' '{' implementation? '}'
+    :   FORSYM '(' declaration? semicolon condition? semicolon forUpdate? ')' '{' implementation? '}'
     ;
 
 condition
     :   lessThen
     |   moreThen
-    |   moreOrEqual
-    |   lessOrEqual
     |   equal
     |   diffrent
     |   BOOLEAN
     ;
+    //todo badz rowne
 
 lessThen
     :   getOrCalculateData WIEKSZYSYM getOrCalculateData
@@ -124,14 +136,6 @@ lessThen
 
 moreThen
     :   getOrCalculateData MNIEJSZYSYM getOrCalculateData
-    ;
-
-moreOrEqual
-    :   getOrCalculateData MNIEJSZYLUBROWNYSYM getOrCalculateData
-    ;
-
-lessOrEqual
-    :   getOrCalculateData WIEKSZYLUBROWNYSYM getOrCalculateData
     ;
 
 equal
@@ -157,10 +161,10 @@ elementName
     ;
 
 data
-    :   INT
-    |   DOUBLE
-    |   STRING
-    |   BOOLEAN
+    :   INT #dataInt
+    |   DOUBLE #dataDbl
+    |   STRING #dataString
+    |   BOOLEAN #dataBool
     ;
 
 multipleParenthesis
@@ -182,8 +186,7 @@ nestedParentheses
     ;
 
 getOrCalculateData
-    :   getData
-    |   calculations
+    :   calculations
     ;
 
 getData
@@ -205,13 +208,11 @@ calculation
     ;
 
 plusMinusCalculations
-    :   getData PLUSSYM getData
-    |   getData MINUSSYM getData
+    :   getData op=(PLUSSYM | MINUSSYM) getData
     ;
 
 timesDivideCalculations
-    :   getData RAZYSYM getData
-    |   getData DZIELENIESYM getData
+    :   getData op=(RAZYSYM | DZIELENIESYM) getData
     ;
 
 calculationSym
@@ -225,38 +226,15 @@ ifstatement
     :   IFSYM '(' condition ')' '{' implementation? '}'
     ;
 
-json
-    :   value
-    ;
 
-value
-    :   data
-    |   jsonObj
-    |   jsonArray
-    |   NULLSYM
-    ;
-
-jsonObj
-    :   '{' pair (',' pair )* '}'
-    |   '{' '}'
-    ;
-
-pair
-    : STRING ':' value
-    ;
-
-jsonArray
-    :   '[' value (',' value)* ']'
-    |   '[' ']'
-    ;
 
 ARRAYSYM : '[]';
 INTSYM : 'int';
 IFSYM : 'if';
 RETURNSYM  : 'return';
-ANDSYM  : '&&';
-ORSYM  : '||';
-NOTSYM  : '!';
+ANDSYM  : 'and';
+ORSYM  : 'or';
+NOTSYM  : 'not';
 DOUBLESYM : 'double';
 STRINGSYM : 'string';
 BOOLEANSYM : 'boolean';
@@ -284,14 +262,12 @@ KONIECLININISYM : 'EOF';
 MNIEJSZYLUBROWNYSYM : '<=';
 WIEKSZYLUBROWNYSYM : '>=';
 KOMENTARZSYM : '//';
-NULLSYM : 'null';
 
 BOOLEAN : 'true' | 'false';
 INT : [0-9]+;
 DOUBLE : [0-9]+ '.' [0-9]+;
 NAME : [a-zA-Z_][a-zA-Z0-9_]*;
-STRING :  '"' ~["]* '"';
-
+STRING : '"' [^"]* '"';
 
 Whitespace
     :   [ \t\r\n]+
