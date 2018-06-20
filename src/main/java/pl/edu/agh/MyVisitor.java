@@ -10,45 +10,23 @@ import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.System.exit;
-
 public class MyVisitor extends edujavaBaseVisitor<Value> {
 
     private Map<String, Value> memory = new HashMap<String, Value>();
 
-    private FileWriter out;
+    private FileUtil out = new FileUtil("C:/Users/djwojtas/gramatyka/src/main/java/pl/edu/agh/output.jxs");
 
     private void beginWritingToFile(){
-        try {
-            //output definition
-            out = new FileWriter("/Users/iza/Desktop/jsonixusTest/Jsonixus/src/main/java/pl/edu/agh/output.jxs");
-            out.write("import testImport.xd \n\n");
-        
-        } catch (Exception e) {
-            System.out.println("Problem with file to write to.");
-            exit(1);
-            e.printStackTrace();
-        }
+        out.write("import testImport.xd \n\n");
     }
 
 
     private void write(String s){
-
-        try {
-            out.write(" " + s );
-        } catch (Exception e) {
-            System.out.println("Problem with printing to file.");
-            e.printStackTrace();
-        }
+        out.write(" " + s );
     }
 
     private void endWriting(){
-        try {
-            out.close();
-        } catch (Exception e) {
-            System.out.println("Problem with closing file.");
-            e.printStackTrace();
-        }
+        out.close();
     }
 
 
