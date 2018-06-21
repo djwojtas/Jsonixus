@@ -284,7 +284,7 @@ BOOLEAN : 'true' | 'false';
 INT : [0-9]+;
 DOUBLE : [0-9]+ '.' [0-9]+;
 NAME : [a-zA-Z_][a-zA-Z0-9_]*;
-STRING : '"' [^"]* '"';
+STRING :  '"' ~["]* '"';
 
 Whitespace
     :   [ \t\r\n]+
