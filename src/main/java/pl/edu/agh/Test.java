@@ -7,21 +7,6 @@ import pl.edu.agh.generated.edujavaParser;
 
 public class Test extends edujavaBaseListener {
 
-//
-//    private FileWriter outputFile;
-//    private void startPrinting(){
-//        try {
-//            outputFile = new FileWriter("");
-//            outputFile.write("");
-//
-//        } catch (Exception e) {
-//            System.out.println("Problem with file to write to.");
-//            exit(1);
-//            e.printStackTrace();
-//        }
-//    }
-
-
     @Override
     public void exitCalculation(edujavaParser.CalculationContext ctx) {
         System.out.println("dsdsd");

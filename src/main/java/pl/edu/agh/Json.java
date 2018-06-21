@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Json {
+
     private Map<String, String> jsonMap = new HashMap<>();
     public String getValue(String key) {
         return jsonMap.get(key);
@@ -14,7 +15,7 @@ public class Json {
     public String getJson() {
         String result = "{\n";
         for(Map.Entry e : jsonMap.entrySet()) {
-            result += "\"" + e.getKey() + "\":\"" + e.getValue() + "\"\n";
+            result += "\"" + e.getKey() + "\":\"" + e.getValue()  + "\",\n";
         }
         return result += "}";
     }

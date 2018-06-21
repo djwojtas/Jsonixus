@@ -43,6 +43,27 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     }
 
     @Override
+    public Value visitIfstatement(edujavaParser.IfstatementContext ctx) {
+        String token = ctx.IFSYM().getSymbol().getText();
+        fileUtil.write(token);
+        fileUtil.write("(");
+        visit(ctx.condition());
+        fileUtil.write(")" + " {\n");
+        visit(ctx.implementation());
+        fileUtil.write("\n}" );
+
+        if (ctx.elsestatement() != null) {
+            fileUtil.write(ctx.elsestatement().ELSESYM().getSymbol().getText());
+            fileUtil.write(" {\n");
+            visit(ctx.elsestatement().implementation());
+            fileUtil.write(" \n}");
+        }
+
+        return new Value("DONE");
+        // super.visitIfstatement(ctx);
+    }
+
+    @Override
     public Value visitMainFunction(edujavaParser.MainFunctionContext ctx) {
 
         fileUtil.write("\n\n public static void main(String[] args) { \n\n");

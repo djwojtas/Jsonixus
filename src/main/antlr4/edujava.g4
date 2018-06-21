@@ -37,6 +37,7 @@ functionCall
 dataType
     :   arrayType
     |   singleDataType
+    |   JSONSYM
     ;
 
 singleDataType
@@ -103,6 +104,7 @@ operation
 assignmentExpression
     :   '=' multipleParenthesis
     |   '=' getData
+    |   '=' json
     ;
 
 
@@ -209,11 +211,40 @@ calculationSym
     ;
 
 ifstatement
-    :   IFSYM '(' condition ')' '{' implementation? '}'
+    :   IFSYM '(' condition ')' '{' implementation? '}' elsestatement?
+    ;
+
+elsestatement
+    :   ELSESYM '{' implementation? '}'
+    ;
+
+json
+    :   value
+    ;
+
+value
+    :   data
+    |   jsonObj
+    |   jsonArray
+    |   NULLSYM
+    ;
+
+jsonObj
+    :   '{' pair (',' pair )* '}'
+    |   '{' '}'
+    ;
+
+pair
+    : STRING ':' value
+    ;
+
+jsonArray
+    :   '[' value (',' value)* ']'
+    |   '[' ']'
     ;
 
 
-
+JSONSYM: 'json';
 ARRAYSYM : '[]';
 INTSYM : 'int';
 IFSYM : 'if';

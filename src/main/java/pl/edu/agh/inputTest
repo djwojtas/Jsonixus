@@ -3,10 +3,19 @@ int result = 24;
 return result;
 }
 
+boolean testIfa( ) {
+    if ( 3 > 4 ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void main() {
 
     boolean czylubiePlacki = true;
-    boolean czyLubieMaslo = czylubiePlacki;
+    boolean maslo = testIfa( );
+    print(maslo);
 
     int a = 1;
     int b = 1;
