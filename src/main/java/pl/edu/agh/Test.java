@@ -1,12 +1,9 @@
 package pl.edu.agh;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import pl.edu.agh.generated.edujavaBaseListener;
 import pl.edu.agh.generated.edujavaParser;
 
 //import java.awt.desktop.SystemSleepEvent;
-import java.io.FileWriter;
-import static java.lang.System.exit;
 
 public class Test extends edujavaBaseListener {
 

@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import pl.edu.agh.generated.edujavaBaseVisitor;
 import pl.edu.agh.generated.edujavaParser;
 
+import javax.sound.midi.SysexMessage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,26 +19,27 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
 
     @Override
     public Value visitRoot(edujavaParser.RootContext ctx) {
-        fileUtil = new FileUtil("/Users/iza/Desktop/jsonixusTest/Jsonixus/src/main/java/pl/edu/agh/Output.xd");
+        fileUtil = new FileUtil("/Users/iza/Desktop/jsonixusTest/Jsonixus/src/main/java/pl/edu/agh/Output.java");
         return super.visitRoot(ctx);
     }
 
     @Override
     public Value visitPlusMinusCalculations(edujavaParser.PlusMinusCalculationsContext ctx) {
 
-//        Value left = this.visit(ctx.getData(0));
-//        Value right = this.visit(ctx.getData(1));
-//
-//        switch (ctx.op.getType()) {
-//            case edujavaParser.PLUSSYM:
-//
-//            case edujavaParser.MINUSSYM:
-//
-//            default:
-//                throw new RuntimeException("unknown operator");
-//        }
+        visit(ctx.getData(0));
 
-        return super.visitPlusMinusCalculations(ctx);
+        switch (ctx.op.getType()) {
+          case edujavaParser.PLUSSYM:
+            fileUtil.write(ctx.PLUSSYM().getSymbol().getText());
+            visit(ctx.getData(1));
+            return new Value("OK");
+          case edujavaParser.MINUSSYM:
+            fileUtil.write(ctx.MINUSSYM().getSymbol().getText());
+            visit(ctx.getData(1));
+            return new Value("OK");
+          default:
+            throw new RuntimeException("unknown operator");
+        }
     }
 
     @Override
@@ -51,6 +53,27 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
         return super.visitMainFunction(ctx);
     }
 
+    @Override
+    public Value visitLoopFor(edujavaParser.LoopForContext ctx) {
+        String forToken = ctx.FORSYM().getSymbol().getText();
+        fileUtil.write("\n" + forToken);
+        fileUtil.write("(");
+        visit(ctx.declaration());
+        visit(ctx.loopSemicolon(0));
+        visit(ctx.condition());
+        visit(ctx.loopSemicolon(1));
+        visit(ctx.forUpdate());
+        fileUtil.write(")" + " {\n");
+        visit(ctx.implementation());
+        fileUtil.write("\n}" );
+        return new Value("DONE");
+
+    }
+
+    @Override
+    public Value visitForUpdate(edujavaParser.ForUpdateContext ctx) {
+        return visitChildren(ctx);
+    }
 
     @Override
     public Value visitFunctionCall(edujavaParser.FunctionCallContext ctx) {
@@ -68,7 +91,33 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
             fileUtil.write(")");
         }
         //return visitChildren(ctx); <- caused visitig tree again and duplicating text
-       return null;
+       return new Value("DONE");
+    }
+
+    @Override
+    public Value visitCondition(edujavaParser.ConditionContext ctx) {
+        visit(ctx.getOrCalculateData(0));
+
+        switch (ctx.sign.getType()) {
+            case edujavaParser.WIEKSZYSYM:
+                fileUtil.write(ctx.WIEKSZYSYM().getSymbol().getText());
+                visit(ctx.getOrCalculateData(1));
+                return new Value("DONE");
+            case edujavaParser.MNIEJSZYSYM:
+                fileUtil.write(ctx.MNIEJSZYSYM().getSymbol().getText());
+                visit(ctx.getOrCalculateData(1));
+                return new Value("DONE");
+            case edujavaParser.ROZNYSYM:
+                fileUtil.write(ctx.ROZNYSYM().getSymbol().getText());
+                visit(ctx.getOrCalculateData(1));
+                return new Value("DONE");
+            case edujavaParser.ROWNOSCSYM:
+                fileUtil.write(ctx.ROWNOSCSYM().getSymbol().getText());
+                visit(ctx.getOrCalculateData(1));
+                return new Value("DONE");
+            default:
+                throw new RuntimeException("unknown operator");
+        }
     }
 
     @Override
@@ -91,6 +140,13 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitDataType(edujavaParser.DataTypeContext ctx) {
         return visitChildren(ctx);
     }
+
+    @Override
+    public Value visitLoop(edujavaParser.LoopContext ctx) {
+        return visitChildren(ctx);
+    }
+
+
 
     @Override
     public Value visitFunctionDeclaration(edujavaParser.FunctionDeclarationContext ctx) {
@@ -254,6 +310,13 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
         System.out.println("visitName detected: " + value );
         fileUtil.write(value);
         return super.visitName(ctx);
+    }
+
+    @Override
+    public Value visitLoopSemicolon(edujavaParser.LoopSemicolonContext ctx) {
+        String value = ctx.getText();
+        fileUtil.write(";");
+        return super.visitLoopSemicolon(ctx);
     }
 
     @Override

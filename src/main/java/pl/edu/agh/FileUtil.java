@@ -10,9 +10,9 @@ public class FileUtil {
     public FileUtil(String filePath) {
         try {
             file = new FileWriter(filePath);
-//            file.write("package pl.edu.agh;");
-//            file.write("//import testImport.xd \n\n");
-//            file.write("public class Output { \n\n public static void print(Object o) { \n System.out.println(o); \n } \n");
+            file.write("package pl.edu.agh;");
+            file.write("\n//import testImport.xd; \n\n");
+            file.write("public class Output { \n\n public static void print(Object o) { \n System.out.println(o); \n } \n");
         } catch (IOException e) {
             System.out.println("Problem with file to write to.");
             exit(1);

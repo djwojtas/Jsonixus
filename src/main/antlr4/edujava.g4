@@ -75,6 +75,7 @@ name
 
 codeExpression
     :   ifstatement
+    |   functionCall semicolon
     |   operation semicolon
     |   declaration semicolon
     |   loop
@@ -118,32 +119,17 @@ loop
     ;
 
 loopFor
-    :   FORSYM '(' declaration? semicolon condition? semicolon forUpdate? ')' '{' implementation? '}'
+    :   FORSYM '(' declaration? loopSemicolon condition? loopSemicolon forUpdate? ')' '{' implementation? '}'
     ;
+
+loopSemicolon
+    :   ';'
+    ;
+
 
 condition
-    :   lessThen
-    |   moreThen
-    |   equal
-    |   diffrent
+    :   getOrCalculateData sign=(WIEKSZYSYM | MNIEJSZYSYM | ROWNOSCSYM | ROZNYSYM) getOrCalculateData
     |   BOOLEAN
-    ;
-    //todo badz rowne
-
-lessThen
-    :   getOrCalculateData WIEKSZYSYM getOrCalculateData
-    ;
-
-moreThen
-    :   getOrCalculateData MNIEJSZYSYM getOrCalculateData
-    ;
-
-equal
-    :   getOrCalculateData ROWNOSCSYM getOrCalculateData
-    ;
-
-diffrent
-    :   getOrCalculateData ROZNYSYM getOrCalculateData
     ;
 
 forUpdate
