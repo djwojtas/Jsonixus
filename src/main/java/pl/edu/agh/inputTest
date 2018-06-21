@@ -11,13 +11,32 @@ boolean testIfa( ) {
     }
 }
 
+int fibonacci(int n) {
+     if (n == 0) {
+         print( n );
+         return 0;
+     }
+     if (n == 1) {
+         print( n );
+        return 0;
+     } else
+         print( n );
+         int k = n - 1;
+         int m = n - 1;
+         return fibonacci( k ) + fibonacci( m );
+     }
+ }
+
 void main() {
 
     boolean czylubiePlacki = true;
     boolean maslo = testIfa( );
+    int d = 3;
+    int wynik = fibonacci(d);
     print(maslo);
     jsonixus jj;
     jj.addPair( "jakisKlucz" , "jakasWartosc" );
+    jj.addPair( "przedmiot" , "kompilatory" );
     print(jj);
     int a = 1;
     int b = 1;
