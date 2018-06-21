@@ -16,7 +16,9 @@ void main() {
     boolean czylubiePlacki = true;
     boolean maslo = testIfa( );
     print(maslo);
-
+    jsonixus jj;
+    jj.addPair( "jakisKlucz" , "jakasWartosc" );
+    print(jj);
     int a = 1;
     int b = 1;
     int c = 2;

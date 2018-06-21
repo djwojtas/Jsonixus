@@ -24,6 +24,7 @@ semicolon
 functionDeclaration
     :   mainFunction
     |   returnType name '(' variables? ')' '{' implementation? '}'
+    |   addJsonPair
     ;
 
 mainFunction //todo zmienic main na mainsym?
@@ -35,9 +36,9 @@ functionCall
     ;
 
 dataType
-    :   arrayType
-    |   singleDataType
-    |   JSONSYM
+    :   arrayType #arType
+    |   singleDataType #singletype
+    |   JSONSYM #jsonSymbol
     ;
 
 singleDataType
@@ -81,6 +82,7 @@ codeExpression
     |   declaration semicolon
     |   loop
     |   returnStatement semicolon
+    |   addJsonPair semicolon
     ;
 
 returnStatement
@@ -90,6 +92,7 @@ returnStatement
 implementation
     :   codeExpression
     |   implementation codeExpression
+    |   addJsonPair
     ;
 
 
@@ -222,6 +225,10 @@ json
     :   value
     ;
 
+addJsonPair
+    : name'.'ADDSJONSYM '(' STRING ',' data ')'
+    ;
+
 value
     :   data
     |   jsonObj
@@ -243,8 +250,8 @@ jsonArray
     |   '[' ']'
     ;
 
-
-JSONSYM: 'json';
+ADDSJONSYM: 'addPair';
+JSONSYM: 'jsonixus';
 ARRAYSYM : '[]';
 INTSYM : 'int';
 IFSYM : 'if';

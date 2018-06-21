@@ -15,11 +15,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-
-//        ANTLRInputStream input = new ANTLRInputStream(
-//                "test");
-
-
         try {
 
             ANTLRInputStream input = new ANTLRInputStream(
@@ -39,20 +34,5 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ////edujavaParser.FormsContext formsSentenceContext = parser.forms();
-
-//        int xd = kiedyIzeBoliBrzuch();
-//        System.out.println(xd);
-
-
-
-//        edujavaParser parser = new edujavaParser(new CommonTokenStream(lexer));
-//        parser.addParseListener(new Test());
-        // ParseTree tree = parser.parse
-//        edu
-//        eduJavaVisitor visitor = new MyVisitor();
-//
-//        parser.root();
-//        visitor.visitData(t)
     }
 }

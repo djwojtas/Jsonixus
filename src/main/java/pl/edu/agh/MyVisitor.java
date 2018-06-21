@@ -157,9 +157,26 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
         return super.visitSingleDataType(ctx);
     }
 
+//    @Override
+//    public Value visitDataType(edujavaParser.DataTypeContext ctx) {
+//        return visitChildren(ctx);
+//    }
+
+
     @Override
-    public Value visitDataType(edujavaParser.DataTypeContext ctx) {
+    public Value visitSingletype(edujavaParser.SingletypeContext ctx) {
         return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitArType(edujavaParser.ArTypeContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitJsonSymbol(edujavaParser.JsonSymbolContext ctx) {
+        //fileUtil.write("\nJson ");
+        return new Value("OK");
     }
 
     @Override
@@ -216,11 +233,38 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
 
 
     @Override
+    public Value visitJson(edujavaParser.JsonContext ctx) {
+        //fileUtil.write("new Json();");
+        return visitChildren(ctx);
+    }
+
+
+
+    @Override
     public Value visitFunctionDeclarations(edujavaParser.FunctionDeclarationsContext ctx) {
         String value = ctx.getText();
         System.out.println("visitFunctionDeclarations detected: " + value );
        // return visitChildren(ctx);
         return super.visitFunctionDeclarations(ctx);
+    }
+
+    @Override
+    public Value visitPair(edujavaParser.PairContext ctx) {
+        String key = ctx.STRING().getText();
+        String value = ctx.value().data().getText();
+        fileUtil.write(key + " , " + value + ");");
+        return new Value("OK");
+    }
+
+    @Override
+    public Value visitValue(edujavaParser.ValueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitJsonObj(edujavaParser.JsonObjContext ctx) {
+
+        return visitChildren(ctx);
     }
 
     @Override
@@ -240,7 +284,29 @@ public class MyVisitor extends edujavaBaseVisitor<Value> {
     public Value visitDeclaration(edujavaParser.DeclarationContext ctx) {
         String value = ctx.getText();
         System.out.println("visitDeclaration detected: " + value );
+
+        if (ctx.dataType().getText().contains("jsonixus")) {
+            System.out.println("🐤"  + ctx.dataType().getText().toString());
+            fileUtil.write("Json ");
+            visit(ctx.name());
+            fileUtil.write("= new Json();");
+            return new Value("done");
+        } else {
+            System.out.println(ctx.dataType().getText().toString());
+
+        }
         return super.visitDeclaration(ctx);
+    }
+
+    @Override
+    public Value visitAddJsonPair(edujavaParser.AddJsonPairContext ctx) {
+
+        String name = ctx.name().getText();
+        fileUtil.write(name + "." + "addValue(");
+        String key = ctx.STRING().getText().toString();
+        String value = ctx.data().getText().toString();
+        fileUtil.write(key + " , " + value + ");");
+        return new Value("OK");
     }
 
     @Override
